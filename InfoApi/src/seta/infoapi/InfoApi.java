@@ -19,16 +19,16 @@ public class InfoApi extends JavaPlugin {
 	// resurrect server thread if it crashes
 	if (!server.isAlive()) {
 	    server.start();
-	    log.info("InfoApi HTTP Listener was resurrected");
+	    log.info("[InfoApi] Server was resurrected");
 	}
 
-	log.info("InfoAPI (Janka flavoured) sucessfully started.");
+	log.info("[InfoApi] Enabled");
     }
 
     @Override
     public void onDisable() {
 	server.close();
-	log.info("InfoAPI (Janka flavoured) sucessfully ended");
+	log.info("[InfoApi] Disabled");
     }
 
 }

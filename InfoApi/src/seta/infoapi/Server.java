@@ -1,18 +1,14 @@
 package seta.infoapi;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.logging.Logger;
 
 class Server extends Thread {
 
     protected boolean threadShouldStop = false;
     Logger log = Logger.getLogger("Minecraft");
-    Socket socket;
     ServerSocket serverSocket;
 
     PrintWriter out;
@@ -29,57 +25,49 @@ class Server extends Thread {
 	while (!this.isClosing()) {
 	    try {
 
-		kickstartSocket();
+		listenSocket();
 
 	    } catch (Exception e) {
-		log.info("InfoApi had some Problems while running");
+		log.info("[InfoApi] ServerThread had some Problems while running");
+		e.printStackTrace();
+
 		this.close();
 	    }
 	}
     }
 
-    private void kickstartSocket() {
+    private void listenSocket() {
+	// Cast from String to Integer / has Problems with configuration
+
+	Integer serverPort = Integer.valueOf(configuration.getConfig("PORT")).intValue();
+
+	ServerSocket serverSocket = null;
+
 	try {
+	    serverSocket = new ServerSocket(serverPort);
 
-	    // Cast from String to Integer
-	    Integer serverPort = Integer.valueOf(configuration.getConfig("port")).intValue();
-	    String outputString, checkString;
-	    ServerSocket serverSocket = null;
-	    Socket clientSocket = null;
-	    BufferedReader input;
-	    PrintWriter output;
-
-	    try {
-		serverSocket = new ServerSocket(serverPort);
-	    } catch (IOException e) {
-		log.info("InfoApi couldn't listen to given Port: " + Integer.toString(serverPort));
-	    }
-
-	    try {
-		clientSocket = serverSocket.accept();
-	    } catch (IOException e) {
-		log.info("InfoApi couldn't accept on: " + Integer.toString(serverPort));
-	    }
-
-	    input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-	    output = new PrintWriter(clientSocket.getOutputStream());
-
-	    checkString = input.readLine();
-	    if (comWorker.isValidCommandString(checkString)) {
-		outputString = comWorker.processCommand(checkString);
-		outputString = HTTPWorker.addHTTPHeader(outputString);
-
-		output.println(outputString);
-		output.flush();
-	    }
-	    input.close();
-	    output.close();
-	    clientSocket.close();
-	    serverSocket.close();
-
-	} catch (Exception e) {
-	    log.info("kickstartSocket " + e.getMessage());
+	} catch (IOException e) {
+	    log.info("[InfoApi] Couldn't listen to given Port: " + Integer.toString(serverPort));
+	    this.close();
 	}
+
+	while (true) {
+	    ClientWorker client;
+	    try {
+		client = new ClientWorker(serverSocket.accept(), comWorker);
+		Thread clientThread = new Thread(client);
+		clientThread.start();
+	    } catch (IOException e) {
+		log.info("[InfoApi] Couldn't accept on: " + Integer.toString(serverPort));
+		this.close();
+	    }
+	}
+	// try {
+	// clientSocket = serverSocket.accept();
+	// } catch (IOException e) {
+	// log.info("[InfoApi] couldn't accept on: " +
+	// Integer.toString(serverPort));
+	// }
     }
 
     /**
@@ -89,10 +77,9 @@ class Server extends Thread {
 	this.threadShouldStop = true;
 
 	try {
-	    socket.close();
 	    serverSocket.close();
 	} catch (Exception e) {
-	    log.info("InfoApi had a Problem while closing");
+	    log.info("[InfoApi] ServerThread a Problem while closing");
 	}
     }
 

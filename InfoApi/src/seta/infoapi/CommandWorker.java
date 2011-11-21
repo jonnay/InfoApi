@@ -95,9 +95,9 @@ public class CommandWorker {
      * @return
      */
     public boolean isValidCommandString(String getString) {
-	String secretKey = configuration.getConfig("secret").toString();
-
-	if (!getString.isEmpty()) {
+	String secretKey = configuration.getConfig("secret");
+	
+	if (getString != null && !getString.isEmpty()) {
 	    if (getString.contains("?" + secretKey)) {
 		return true;
 	    }

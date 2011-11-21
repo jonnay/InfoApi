@@ -24,7 +24,7 @@ public class Config {
 
     static String pluginName = "InfoApi";
     static String mainDirectory = "plugins/" + pluginName;
-    static File configs = new File(mainDirectory + File.separator + "config.cfg");
+    static File configFile = new File(mainDirectory + File.separator + "config.cfg");
     static Properties config = new Properties();
 
     Config() {
@@ -33,10 +33,10 @@ public class Config {
 	    mainDir.mkdir();
 	}
 
-	if (!configs.exists()) {
+	if (!configFile.exists()) {
 	    try {
-		configs.createNewFile();
-		FileOutputStream out = new FileOutputStream(configs);
+		configFile.createNewFile();
+		FileOutputStream out = new FileOutputStream(configFile);
 		config.put(Preferences.SECRET.name(), Preferences.SECRET.getDefaultValue());
 		config.put(Preferences.PORT.name(), Preferences.PORT.getDefaultValue());
 		config.put(Preferences.SERVER_NAME.name(), Preferences.SERVER_NAME.getDefaultValue());
@@ -61,12 +61,17 @@ public class Config {
     }
 
     public String getConfig(String key) {
-	return config.getProperty(key);
+	String storedValue = config.getProperty(key.toUpperCase());
+	if(storedValue != null && storedValue.isEmpty()) {
+	    storedValue = Preferences.valueOf(key).defaultValue;
+	}
+	
+	return storedValue;
     }
 
     private void loadConfig() {
 	try {
-	    FileInputStream inStream = new FileInputStream(configs);
+	    FileInputStream inStream = new FileInputStream(configFile);
 	    config.load(inStream);
 	} catch (IOException ex) {
 	    ex.printStackTrace();
@@ -75,7 +80,7 @@ public class Config {
 
     private void saveConfig() {
 	try {
-	    FileOutputStream out = new FileOutputStream(configs);
+	    FileOutputStream out = new FileOutputStream(configFile);
 	    config.store(out, pluginName + " Config file");
 	    out.flush();
 	    out.close();
