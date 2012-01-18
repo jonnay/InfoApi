@@ -1,7 +1,0 @@
-name: InfoApi
-main: seta.infoapi.InfoApi
-version: 0.3.4
-description: Provides Information about Minecraft Server queryable by HTTP Request
-author: seta
-authors: [seta, janka]
-website: http://dev.bukkit.org/server-mods/infoapi/
