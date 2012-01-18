@@ -1,0 +1,86 @@
+* InfoApi V 0.1.1(JA)
+
+* Documentation
+
+
+Info APi works alright, but there are some tweaks that could be done to improve it.  This is my attempt.
+
+each request needs its secret key at the end like: 
+http://server:25577/version?secret
+
+
+** Existing API Queries:
+   - http://localhost:25577/playerlist?secret=secret
+   - http://localhost:25577/playerlist/world?secret=secret
+   - http://localhost:25577/maxplayer?secret=secret
+   - http://localhost:25577/onlinemode?secret=secret
+   - http://localhost:25577/version?secret=secret
+   - http://localhost:25577/ram (returns as: FREE MAX TOTAL)
+   - http://localhost:25577/cpu (CPU core number)
+
+** Possible Api Querys:
+   - http://server:25577/onlineplayer 
+   - http://server:25577/onlineplayer/WORLDNAME 
+   - http://server:25577/playerlist 
+   - http://server:25577/playerlist/WORLDNAME 
+   - http://server:25577/maxplayer 
+   - http://server:25577/temp/WORLDNAME (Temperature at Spawn ) 
+   - http://server:25577/time/WORLDNAME 
+   - http://server:25577/onlinemode 
+   - http://server:25577/version 
+   - http://server:25577/say/text_to_say 
+   - http://server:25577/cmd/cmd_attribute_another
+
+** Config File
+secret=secret # Youre Secret Key
+port=25577 # The Port to use
+opplayer=kingseta # Not used atm
+name=&a[&bServer&a]&f # The Chat Name
+enablechatlog=true # Not used atm
+loglength=25 # Not used atm
+
+** Installation 
+Please note: this Plugin will give an Error if you do /reload, because the API Server CAN'T get reloaded at the moment. Thats not really an
+problem, but you should know. Also there can be an Error on Shutdown... im sorry about that
+
+** Example Usage PHP:
+$apiurl = "http://server:25577/onlineplayer"
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $apiurl);
+curl_setopt($ch, CURLOPT_HEADER, 1);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_TIMEOUT, 1000);
+$onlineplayer = curl_exec($ch);
+echo $onlineplayer;
+
+ 
+
+If somebody knows how i could convert Minecraft Time to real time, please say 
+
+
+* Code Layout
+  - Client Worker - Thread to handle the HTTP connection
+  - CommandWorker - parses request and executes commands
+  - Config 
+
+* Todo
+** PROJECT Fix problems with ClientWorker
+*** TODO Remove magic Numbers!
+*** TODO Move secretout of this class and into its own.
+*** TODO Look into exiting URL parsing libraries in java
+*** TODO Handle any HTTP verb
+*** TODO Change the return type to a new class
+	- Abstract: HttpResponse
+	  - Abstract: HttpErrorResponse
+		- HttpServerErrorResponse
+		- HttpClientErrorResponse
+	- HttpContentResponse (concrete for now, abstract later to seperate the content and presentation.  (json responses, text responses)
+** PROJECT Fix config
+*** TODO Standard seems to be YAML.  Make that happen
+** PROJECT Fix secret 
+*** TODO do a more secure method of hashing.
+** PROJECT Fix commands in general
+*** TODO Add a way to send text to teh server
+*** TODO add a way to run a command
+*** TODO Refactor commands completely:
+	- one class per command
