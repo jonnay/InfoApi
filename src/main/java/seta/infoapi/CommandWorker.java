@@ -38,7 +38,7 @@ public class CommandWorker {
      * @param getString
      * @return
      */
-    public String processCommand(String getString) {
+    public HttpResponse processCommand(String getString) {
 		try {
 			String outputString = "";
 			String wString;
@@ -69,18 +69,33 @@ public class CommandWorker {
 						}
 					}
 
+					
 					if (outputString.endsWith(ControlCharacter.CHAIN.getCommandChar())) {
 						outputString = outputString.substring(0, outputString.length() - 1);
 					}
+
+					return new HttpContentResponse(outputString);
+					
+				} else {
+					return new HttpErrorResponse(400, "Bad Request", "Invalid URI!");
 				}
+
+
+				//return HttpContentResponse(outputString);
+				
 			} else {
-				throw new Exception("No Valid Command");
+				log.warning("No valid Command: "+getString);
+				//throw new Exception("No Valid Command");
+				return new HttpErrorResponse(404, "Not Found", "No command by that URI");
 			}
 
-			return outputString;
+
+
+
+			// catching Exception e?  Really? This needs to die soon.
 		} catch (Exception e) {
 			log.info("processCommand " + e.getMessage());
-			return "ERROR";
+			return new HttpErrorResponse(500, "Internal Server Error", e.toString());
 		}
     }
 
@@ -126,7 +141,7 @@ public class CommandWorker {
      * @param commandOrdinal
      * @return
      */
-    private String workGenericCommand(int commandOrdinal) {
+    private HttpResponse workGenericCommand(int commandOrdinal) {
 		try {
 			String outputString = "ERROR";
 
@@ -168,16 +183,18 @@ public class CommandWorker {
 					break;
 					// RETURN IF NOTHING FIT
 				default:
-					outputString = "Not Configured";
-					break;
+					return new HttpErrorResponse(403, "Not Found", "Command not found");
+					
 				}
+			} else {
+				return new HttpErrorResponse(403, "Not Found", "Command not found");
 			}
 
-			return outputString;
+			return new HttpContentResponse(outputString);
 		} catch (Exception e) {
 			log.info("workGenericCommand " + e.getMessage());
-
-			return "ERROR";
+			
+			return new HttpErrorResponse(500, "Internal Server Error", e.toString());
 		}
     }
 
@@ -196,7 +213,7 @@ public class CommandWorker {
 		}
     }
 
-    private String workWorldCommand(int commandOrdinal, String worldName) {
+    private HttpResponse workWorldCommand(int commandOrdinal, String worldName) {
 		try {
 			String outputString = "ERROR";
 
@@ -233,17 +250,21 @@ public class CommandWorker {
 						break;
 						// RETURN IF NOTHING FIT
 					default:
-						outputString = "Not Configured";
-						break;
+						return new HttpErrorResponse(404, "Not Found", "Command does not exist");
 					}
+				} else {
+					return new HttpErrorResponse (404, "Not Found", "World not found");
 				}
+			} else {
+				return new HttpErrorResponse (404, "Not Found", "Command does not exist");
 			}
 
-			return outputString;
+			return new HttpContentResponse(outputString);
 
 		} catch (Exception e) {
 			log.info("workWorldCommand " + e.getMessage());
-			return "ERROR";
+			return new HttpErrorResponse(500, "Internal Server Error", e.toString());
+			
 		}
     }
 

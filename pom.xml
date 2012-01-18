@@ -3,7 +3,7 @@
 
     <groupId>seta.infoapi</groupId>
     <artifactId>InfoApi</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>InfoApi</name>
     <url>https://github.com/jonnay/InfoApi</url>
     <packaging>jar</packaging>
@@ -12,12 +12,14 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-  
+	
     <repositories>
+		<!--
         <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/repo</url>
         </repository>
+		-->
     </repositories>
 
     <dependencies>
@@ -33,7 +35,7 @@
             <resource>
                 <targetPath>.</targetPath>
 				<!-- was /src/main/resources... maybe that is better? Baby steps.. -->
-                <directory>${basedir}/InfoApi/src/resources/</directory>
+                <directory>${basedir}/src/main/resources/</directory>
                 <filtering>true</filtering>
                 <includes>
                     <!--<include>config.yml</include>-->
@@ -51,6 +53,11 @@
         </resources>
         
         <plugins>
+			<plugin>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0-beta-6</version>
+			</plugin>
 			<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>

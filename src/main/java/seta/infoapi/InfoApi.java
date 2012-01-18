@@ -22,7 +22,7 @@ public class InfoApi extends JavaPlugin {
 	    log.info("[InfoApi] Server was resurrected");
 	}
 
-	log.info("[InfoApi] Enabled");
+	log.info("[InfoApi] (bunny version) Enabled");
     }
 
     @Override
