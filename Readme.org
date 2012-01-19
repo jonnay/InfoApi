@@ -119,10 +119,14 @@ http://localhost:25577/temp/world?secret=secret (Temperature at Spawn )
 *** DONE Remove magic Numbers!
 	 CLOSED: [2012-01-18 Wed 11:55]
 *** TODO Move secret out of this class and into its own.
-*** TODO Look into exiting URL parsing libraries in java
-*** TODO Fix url Parsing to be more rest like 
-*** TODO Handle any HTTP verb
-*** TODO Ditch multiple commands.  
+*** DONE Look into exiting URL parsing libraries in java
+	 CLOSED: [2012-01-18 Wed 23:42]
+*** DONE Fix url Parsing to be more rest like
+	 CLOSED: [2012-01-18 Wed 23:43]
+*** DONE Handle any HTTP verb
+	 CLOSED: [2012-01-18 Wed 23:43]
+*** DONE Ditch multiple commands.
+	 CLOSED: [2012-01-18 Wed 23:43]
 *** DONE Change the return type to a new class
 	 CLOSED: [2012-01-18 Wed 13:30]
 	- Abstract: HttpResponse
@@ -131,14 +135,18 @@ http://localhost:25577/temp/world?secret=secret (Temperature at Spawn )
 		- HttpClientErrorResponse
 	- HttpContentResponse (concrete for now, abstract later to seperate the content and presentation.  (json responses, text responses)
 ** PROJECT Fix config
+*** TODO better checking about the config.  The Default should be much nicer.
 *** DONE Standard seems to be YAML.  Make that happen
 	 CLOSED: [2012-01-18 Wed 17:04]
-*** TODO Test
-*** TODO Test to see if the config exists, if it does, make it.  If not, don't save it.
+*** DONE Test
+	 CLOSED: [2012-01-18 Wed 23:44]
+*** DONE Test to see if the config exists, if it does, make it.  If not, don't save it.
+	 CLOSED: [2012-01-18 Wed 23:44]
 ** PROJECT Fix secret 
 *** DONE no secret? how about a 403 instead?
 	 CLOSED: [2012-01-18 Wed 13:31]
-*** TODO Secret is set to "secret"?  throw warnings, maybe disable server
+*** DONE Secret is set to "secret"?  throw warnings, maybe disable server
+	 CLOSED: [2012-01-18 Wed 23:45]
 *** TODO make sure the check is valid
 *** TODO do a more secure method of hashing.
 ** PROJECT Fix commands in general
@@ -146,6 +154,235 @@ http://localhost:25577/temp/world?secret=secret (Temperature at Spawn )
 *** TODO add a way to run a command
 *** TODO Refactor commands completely:
 	- one class per command
+
+** PROJECT Make endpoints dynamic
+*** TODO Refactor out old endpoints into their own classes
+*** TODO add command /reload to reload the manager and all endpoint classes
+*** TODO Stash the loader somewhere, and execute it 
+*** TODO compile the infoAPI files 
+#+begin_src java
+
+    private HttpResponse workGenericCommand(int commandOrdinal) {
+		try {
+			String outputString = "ERROR";
+
+			if (commandOrdinal != Integer.MIN_VALUE) {
+
+				switch (commandOrdinal) {
+					// MAXPLAYER
+				case MAX_PLAYER:
+					outputString = Integer.toString(Bukkit.getServer().getMaxPlayers());
+					break;
+					// ONLINEMODE
+				case ONLINEMODE:
+					outputString = Boolean.toString(Bukkit.getServer().getOnlineMode());
+					break;
+					// VERSION
+				case VERSION:
+					outputString = Bukkit.getServer().getVersion();
+					break;
+					// VERSION_SHORT
+				case VERSION_SHORT:
+					outputString = Bukkit.getServer().getVersion();
+					outputString = outputString.substring(outputString.indexOf("(") + 1, outputString.lastIndexOf(")"));
+					break;
+					// RAM
+				case RAM:
+					outputString = getRuntimeMemoryInformationAsString();
+					break;
+					// CPU
+				case CPU:
+					outputString = "Not Possible due of JAVA Limitation";
+					break;
+					// PLUGINS
+				case PLUGINS:
+					outputString = returnPluginNames(Bukkit.getServer().getPluginManager().getPlugins());
+					break;
+					// PLUGINS_SHORT
+				case PLUGINS_SHORT:
+					outputString = returnPluginShortNames(Bukkit.getServer().getPluginManager().getPlugins());
+					break;
+					// RETURN IF NOTHING FIT
+				default:
+					return new HttpErrorResponse(403, "Not Found", "Command not found");
+					
+				}
+			} else {
+				return new HttpErrorResponse(403, "Not Found", "Command not found");
+			}
+
+			return new HttpContentResponse(outputString);
+		} catch (Exception e) {
+			log.info("workGenericCommand " + e.getMessage());
+			
+			return new HttpErrorResponse(500, "Internal Server Error", e.toString());
+		}
+    }
+
+    /**
+     * Returns fancy formated Playernames
+     * 
+     * @param playerList
+     * @return
+     */
+    private String returnPlayerNames(List<Player> playerList) {
+		try {
+			String returnString = "";
+
+			if (playerList.size() > 0) {
+				for (Player pl : playerList) {
+					log.info(pl.getName());
+					returnString += pl.getName() + " ";
+				}
+			} else {
+				returnString = "";
+			}
+
+			return returnString;
+		} catch (Exception e) {
+			log.info("returnPlayerNames " + e.getMessage());
+			return "";
+		}
+    }
+
+    private int getCelsiusFromDoubleTemperature(double temperature) {
+		int maxCelsius = 60;
+		int minCelsius = -16;
+		int amountOfSteps = (maxCelsius - minCelsius);
+
+		int[] celsiusSkala = new int[amountOfSteps];
+		double multiplikator = (1 / ((double) amountOfSteps + 1));
+
+		int result = 0;
+
+		for (int iteration = 0; iteration < amountOfSteps; iteration++) {
+			celsiusSkala[iteration] = minCelsius + iteration;
+		}
+
+		result = celsiusSkala[(int) Math.floor(temperature / multiplikator)];
+
+		return result;
+
+    }
+    
+    private String returnPluginShortNames(Plugin[] plugins) {
+		try {
+			String returnString = "";
+
+			if (plugins.length > 0) {
+				for (Plugin plugin : plugins) {
+					returnString += plugin.getDescription().getName() + "\r\n";
+				}
+			} else {
+				returnString = "";
+			}
+
+			return returnString;
+		} catch (Exception e) {
+			log.info("returnPluginShortNames " + e.getMessage());
+			return "";
+		}
+    }
+    
+    private String returnPluginNames(Plugin[] plugins) {
+		try {
+			String returnString = "";
+
+			if (plugins.length > 0) {
+				for (Plugin plugin : plugins) {
+					returnString += plugin.getDescription().getFullName() + "\r\n";
+				}
+			} else {
+				returnString = "";
+			}
+
+			return returnString;
+		} catch (Exception e) {
+			log.info("returnPluginNames " + e.getMessage());
+			return "";
+		}
+    }
+
+
+    private int getOnlyRealPlayerCount(List<Player> playerList) {
+		try {
+			int realPlayers = 0;
+
+			for (Player player : playerList) {
+				String localHostName = InetAddress.getLocalHost().getHostName();
+				String playerHostName = player.getAddress().getHostName();
+
+				log.info(localHostName + " not " + playerHostName);
+
+				if (!localHostName.equals(playerHostName)) {
+					realPlayers++;
+				}
+			}
+
+			return realPlayers;
+		} catch (Exception e) {
+			log.info("getOnlyRealPlayerCount " + e.getMessage());
+			return 0;
+		}
+    }
+
+
+
+    private HttpResponse workWorldCommand(int commandOrdinal, String worldName) {
+		try {
+			String outputString = "ERROR";
+
+			if (commandOrdinal != Integer.MIN_VALUE) {
+				if (isValidWorldName(worldName)) {
+					switch (commandOrdinal) {
+						// ONLINEPLAYER - count of Players Online
+					case 0:
+						if (configuration.getBoolean("npcSaveMode")) {
+							outputString = Integer.toString(getOnlyRealPlayerCount(Bukkit.getServer().getWorld(worldName).getPlayers()));
+						} else {
+							outputString = Integer.toString(Bukkit.getServer().getWorld(worldName).getPlayers().size());
+						}
+						break;
+						// PLAYERLIST - List of Players Online
+					case 1:
+						outputString = returnPlayerNames(Bukkit.getServer().getWorld(worldName).getPlayers());
+						break;
+						// TEMP
+					case 2:
+						outputString = Double.toString(Bukkit.getServer().getWorld(worldName).getSpawnLocation().getBlock().getTemperature());
+						break;
+						// TIME
+					case 3:
+						outputString = Long.toString(Bukkit.getServer().getWorld(worldName).getTime());
+						break;
+						// TEMPC
+					case 4:
+						outputString = Integer.toString(getCelsiusFromDoubleTemperature(Bukkit.getServer().getWorld(worldName).getSpawnLocation().getBlock().getTemperature()));
+						break;
+						// HUMIDITY
+					case 5:
+						outputString = Double.toString(Bukkit.getServer().getWorld(worldName).getSpawnLocation().getBlock().getHumidity());
+						break;
+						// RETURN IF NOTHING FIT
+					default:
+						return new HttpErrorResponse(404, "Not Found", "Command does not exist");
+					}
+				} else {
+					return new HttpErrorResponse (404, "Not Found", "World not found");
+				}
+			} else {
+				return new HttpErrorResponse (404, "Not Found", "Command does not exist");
+			}
+
+			return new HttpContentResponse(outputString);
+
+		} catch (Exception e) {
+			log.info("workWorldCommand " + e.getMessage());
+			return new HttpErrorResponse(500, "Internal Server Error", e.toString());
+			
+		}
+    }
+#+end_src
 
 * License 
 #+begin_src txt :tangle LICENSE.txt 

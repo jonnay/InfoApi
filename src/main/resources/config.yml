@@ -1,0 +1,8 @@
+
+# Horribly insecure password here.  FOR THE LOVE OF GOD, CHANGE THIS
+# Uncomment the next like and change "secret" to something that doesn't suck.
+# secretKey: secret
+secretKey: secret
+port: 25577
+npcSaveMode: true
+logRequests: true
