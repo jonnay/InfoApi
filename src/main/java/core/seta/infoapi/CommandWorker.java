@@ -16,9 +16,11 @@ public class CommandWorker {
 	
     private FileConfiguration configuration;
     Logger log = Logger.getLogger("Minecraft");
-
-    public CommandWorker(FileConfiguration cfg) {
+	InfoApi plugin;
+	
+    public CommandWorker(InfoApi plugin, FileConfiguration cfg) {
 		configuration = cfg;
+		this.plugin = plugin;
     }
 
 	private String getMethod(String requestLine) {

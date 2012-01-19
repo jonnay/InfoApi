@@ -22,9 +22,14 @@ class Server extends Thread {
     CommandWorker comWorker;
 	FileConfiguration config ;
 
-    public Server(FileConfiguration config) {
-		comWorker = new CommandWorker(config);
+	InfoApi plugin;
+	
+    public Server(InfoApi plugin, FileConfiguration config) {
 		this.config = config;
+		this.plugin = plugin;
+
+		comWorker = new CommandWorker(plugin, config);
+
     }
 
     public void run() {
@@ -120,15 +125,12 @@ class Server extends Thread {
 				output.println(new HttpErrorResponse(400, "Bad Request", "Empty request! o.o"));
 				output.flush();
 				
-			} if (comWorker.isValidCommandString(checkString)) {
-				output.println(comWorker.processCommand(checkString).toString());  //toString is implicit here I think, but explicit is a bit easier to understand.
-				output.flush();
-				client.close();
-			} else {
-				output.println(new HttpErrorResponse(403, "Unauthorized", "Not a valid secret key").toString());
-				output.flush();
-				client.close();
 			}
+
+			output.println(comWorker.processCommand(checkString).toString());  //toString is implicit here I think, but explicit is a bit easier to understand.
+			output.flush();
+			client.close();
+			
 		} catch (IOException e) {
 			log.info("[InfoApi] Could not read or write");
 			log.info("[InfoApi] "+e.toString());

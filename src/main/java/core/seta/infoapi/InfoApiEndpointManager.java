@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 // https://github.com/Herocraft/Heroes/blob/master/src/com/herocraftonline/dev/heroes/skill/SkillManager.java
 
 public class InfoApiEndpointManager {
-	private static final String DELINEATION = "endpoint.main: ";
+	private static final String DELINEATION = "main-class: ";
 	
     private final File dir;
     private final ClassLoader classLoader;

@@ -9,12 +9,16 @@ public class InfoApi extends JavaPlugin {
     Logger log = Logger.getLogger("Minecraft");
     Server server;
 
+	InfoApiEndpointManager endpointManager;
+	
     @Override
     public void onEnable() {
 
 		//Config configuration = new Config();
 
-		server = new Server(getConfig());  // not sure I like passing aorund the config so much, but...
+		endpointManager = new InfoApiEndpointManager(this);
+		
+		server = new Server(this, getConfig());  // not sure I like passing aorund the config so much, but...
 		this.saveConfig();  // K, this is kinda lame, I 'd rather test to see if it exists before just saving it.. but..
 		
 		server.start();
@@ -34,4 +38,7 @@ public class InfoApi extends JavaPlugin {
 		log.info("[InfoApi] Disabled");
     }
 
+	public InfoApiEndpointManager getEndpointManager()  {
+		return endpointManager;
+	}
 }

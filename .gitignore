@@ -1,1 +1,10 @@
 /target/
+/.DS_Store
+/core/.DS_Store
+/src/.DS_Store
+/src/main/.DS_Store
+/src/main/java/.DS_Store
+/version/target/InfoApi-version-0.0.1-SNAPSHOT.jar
+/version/target/maven-archiver/pom.properties
+/core/target/InfoApi-core-0.0.1-SNAPSHOT.jar
+/core/target/maven-archiver/pom.properties

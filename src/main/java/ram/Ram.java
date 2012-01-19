@@ -1,7 +1,13 @@
-package seta.infoapi;
+package net.jonnay.infoapi.ram;
+
+import org.bukkit.Bukkit;
+import seta.infoapi.HttpResponse;
+import seta.infoapi.HttpContentResponse;
+import seta.infoapi.InfoApiEndpoint;
+
 
 public class Ram extends InfoApiEndpoint {
-	String endpoint "/ram";
+	String endpoint = "/ram";
 	String docString = "Returns the available ram of the server in the format: Total / Free / Max";
 	
 	public HttpResponse methodGet() {
