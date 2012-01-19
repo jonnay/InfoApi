@@ -4,10 +4,13 @@ import java.net.InetAddress;
 import java.util.List;
 import java.util.logging.Logger;
 
+import java.net.URL;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public class CommandWorker {
 
@@ -25,13 +28,23 @@ public class CommandWorker {
 	public static final int PLUGINS_SHORT = 7;
 	
 	
-    private Config configuration;
+    private FileConfiguration configuration;
     Logger log = Logger.getLogger("Minecraft");
 
-    public CommandWorker(Config cfg) {
+    public CommandWorker(FileConfiguration cfg) {
 		configuration = cfg;
     }
 
+	private String getMethod(String requestLine) {
+		return requestLine.substring(0, requestLine.indexOf(" "));
+	}
+
+	private URL getUrl(String requestLine) throws java.net.MalformedURLException {
+		return new URL("http://localhost"+
+					   requestLine.substring((requestLine.indexOf(" ")+1),
+											 requestLine.lastIndexOf(" HTTP/")));
+	}
+	
     /**
      * Process Commands Decides what to do with Commands
      * 
@@ -40,45 +53,82 @@ public class CommandWorker {
      */
     public HttpResponse processCommand(String getString) {
 		try {
-			String outputString = "";
-			String wString;
-			String[] seperatedCommands;
+			String command;
 			Integer commandOrdinal;
 			String worldName;
 
+			URL url;
+			String method;
+			
 			if (isValidCommandString(getString)) {
-				// Remove HTTP Request Header Parts
-				wString = getString.substring((getString.lastIndexOf("GET /") + 5), (getString.lastIndexOf(" HTTP/")));
 
-				// Remove Secret Key and leading Question Mark
-				// it should be save now to use just the command
-				wString = wString.substring(0, wString.lastIndexOf(ControlCharacter.END.getCommandChar()));
-
-				seperatedCommands = splitIntoSeperateCommands(wString);
-
-				if (seperatedCommands.length > 0) {
-					for (String singleCommand : seperatedCommands) {
-						if (isWorldCommand(singleCommand)) {
-							worldName = extractWorldName(singleCommand);
-
-							commandOrdinal = WorldCommands.getOrdinal(extractCommand(singleCommand));
-							outputString += workWorldCommand(commandOrdinal, worldName) + "+";
-						} else {
-							commandOrdinal = GeneralCommands.getOrdinal(singleCommand);
-							outputString += workGenericCommand(commandOrdinal) + ControlCharacter.CHAIN.getCommandChar();
-						}
-					}
-
-					
-					if (outputString.endsWith(ControlCharacter.CHAIN.getCommandChar())) {
-						outputString = outputString.substring(0, outputString.length() - 1);
-					}
-
-					return new HttpContentResponse(outputString);
-					
-				} else {
-					return new HttpErrorResponse(400, "Bad Request", "Invalid URI!");
+				
+				method = getMethod(getString);
+				try {
+					url = getUrl(getString);
+				} catch (java.net.MalformedURLException e) {
+					log.severe("[InfoApi] Malformed URL! This should never have happened!  Request line was: "+getString);
+					log.severe(e.toString());
+					return new HttpErrorResponse(500, "Internal Server Error", e.toString());
 				}
+
+				if (configuration.getBoolean("log-requests")) {
+					log.info("[InfoApi] ("+method+") ("+url.toString()+")");
+				}
+
+				command = url.getPath().substring(1);
+				
+				log.info("[InfoApi] running:"+command);
+
+				/* this whole section could use a refactoring.  commands should decide for themselves what their paths mean.
+				   So in the case of /time .. it makes sense to enforce a path, and the second being the world which you want
+				   to see the time in.
+				   For /cmd, when I write it, it makes way more sense to have something like /cmd/hunt or /cmd/say
+				   Of course, /cmd woudln't be handled via GET, cause that would be DUMB.
+				*/
+				if (isWorldCommand(command)) {
+					worldName = extractWorldName(command);
+
+					// this makes me sssccreech in pain, and needs to be fixed.
+					commandOrdinal = WorldCommands.getOrdinal(extractCommand(command));
+					return workWorldCommand(commandOrdinal, worldName);
+				} else {
+					commandOrdinal = GeneralCommands.getOrdinal(command);
+					return workGenericCommand(commandOrdinal);
+				}
+				
+				// // Remove HTTP Request Header Parts
+				// wString = getString.substring((getString.lastIndexOf("GET /") + 5), (getString.lastIndexOf(" HTTP/")));
+
+				// // Remove Secret Key and leading Question Mark
+				// // it should be save now to use just the command
+				// wString = wString.substring(0, wString.lastIndexOf(ControlCharacter.END.getCommandChar()));
+
+				// seperatedCommands = splitIntoSeperateCommands(wString);
+
+				// if (seperatedCommands.length > 0) {
+				// 	for (String singleCommand : seperatedCommands) {
+				// 		if (isWorldCommand(singleCommand)) {
+				// 			worldName = extractWorldName(singleCommand);
+
+				// 			commandOrdinal = WorldCommands.getOrdinal(extractCommand(singleCommand));
+				// 			outputString += workWorldCommand(commandOrdinal, worldName) + "+";
+				// 		} else {
+				// 			commandOrdinal = GeneralCommands.getOrdinal(singleCommand);
+				// 			outputString += workGenericCommand(commandOrdinal) + ControlCharacter.CHAIN.getCommandChar();
+				// 		}
+				// 	}
+
+					
+				// 	if (outputString.endsWith(ControlCharacter.CHAIN.getCommandChar())) {
+				// 		outputString = outputString.substring(0, outputString.length() - 1);
+				// 	}
+
+				// 	return new HttpContentResponse(outputString);
+					
+				// } else {
+				// 	return new HttpErrorResponse(400, "Bad Request", "Invalid URI!");
+				// }
 
 
 				//return HttpContentResponse(outputString);
@@ -124,10 +174,13 @@ public class CommandWorker {
      * @return
      */
     public boolean isValidCommandString(String getString) {
-		String secretKey = configuration.getConfig("secret");
-	
+		// every time we check this, we want to be LOUD about the fact the secret is unsecure
+		if (configuration.getString("secretKey").equals("secret")) {
+			log.severe("[InfoApi] SECRET KEY IS INSECURE! (edit plugins/InfoApi/config.yml and Choose something sekrut!)");
+		}
+		
 		if (getString != null && !getString.isEmpty()) {
-			if (getString.contains("?" + secretKey)) {
+			if (getString.contains("?" + configuration.getString("secretKey"))) {
 				return true;
 			}
 		}
@@ -222,7 +275,7 @@ public class CommandWorker {
 					switch (commandOrdinal) {
 						// ONLINEPLAYER - count of Players Online
 					case 0:
-						if (configuration.getConfig("npc-save-mode").equals("true")) {
+						if (configuration.getBoolean("npcSaveMode")) {
 							outputString = Integer.toString(getOnlyRealPlayerCount(Bukkit.getServer().getWorld(worldName).getPlayers()));
 						} else {
 							outputString = Integer.toString(Bukkit.getServer().getWorld(worldName).getPlayers().size());

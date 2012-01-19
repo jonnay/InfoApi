@@ -35,48 +35,7 @@ public class ClientWorker implements Runnable {
     }
 
     private void listenSocket() {
-		BufferedReader input = null;
-		PrintWriter output = null;
-		String outputString, checkString;
 
-		try {
-			input = new BufferedReader(new InputStreamReader(client.getInputStream()));
-			output = new PrintWriter(client.getOutputStream());
-		} catch (IOException e) {
-			log.info("[InfoApi] Could not start Reading or Writing Handlers");
-			this.close();
-		}
-
-		while (true) {
-			try {
-				checkString = input.readLine();
-				if (checkString == null || checkString.isEmpty()) {
-					output.println(new HttpErrorResponse(400, "Bad Request", "Empty request! o.o"));
-					output.flush();
-								   
-				} if (comWorker.isValidCommandString(checkString)) {
-					/*
-					  outputString = comWorker.processCommand(checkString);
-					  outputString = HTTPWorker.addHTTPHeader(outputString);
-			
-					  output.println(outputString);
-					  output.flush();
-					*/
-					output.println(comWorker.processCommand(checkString));
-					output.flush();
-					this.close();
-				} else {
-					output.println(new HttpErrorResponse(403, "Unauthorized", "Not a valid secret key"));
-					output.flush();
-					this.close();
-				}
-			} catch (IOException e) {
-				log.info("[InfoApi] Could not read or write");
-				log.info("[InfoApi] "+e.toString());
-				e.printStackTrace();
-				this.close();
-			}
-		}
     }
 
     /**

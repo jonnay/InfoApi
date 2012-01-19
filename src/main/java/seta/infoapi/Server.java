@@ -9,6 +9,8 @@ import java.net.Socket;
 
 import java.util.logging.Logger;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 class Server extends Thread {
 
     protected boolean threadShouldStop = false;
@@ -16,13 +18,13 @@ class Server extends Thread {
     ServerSocket serverSocket;
 
     PrintWriter out;
-    Config configuration;
 
     CommandWorker comWorker;
+	FileConfiguration config ;
 
-    public Server(Config cfg) {
-		configuration = cfg;
-		comWorker = new CommandWorker(cfg);
+    public Server(FileConfiguration config) {
+		comWorker = new CommandWorker(config);
+		this.config = config;
     }
 
     public void run() {
@@ -51,19 +53,15 @@ class Server extends Thread {
 	 * http://java.sun.com/developer/technicalArticles/Networking/Webserver/WebServercode.html
 	 */
     private void listenSocket() {
-		// Cast from String to Integer / has Problems with configuration
-
-		Integer serverPort = Integer.valueOf(configuration.getConfig("PORT")).intValue();
-
 		ServerSocket serverSocket = null;
 
 		try {
-			serverSocket = new ServerSocket(serverPort);
+			serverSocket = new ServerSocket(config.getInt("port"));
 			while (true) {
 				handleConnection(serverSocket.accept(), comWorker);
 			}
 		} catch (IOException e) {
-			log.info("[InfoApi] Couldn't listen to given Port: " + Integer.toString(serverPort));
+			log.info("[InfoApi] Couldn't listen to given Port: " + Integer.toString(config.getInt("port")));
 			this.close();
 		}
 
@@ -113,7 +111,11 @@ class Server extends Thread {
 
 		// except we don't try to handle a single connection forever... just once!
 		try {
-			checkString = input.readLine();
+			String requestLine = input.readLine();
+
+			// Here is where we should parse the header.  Later
+			checkString = requestLine;
+			
 			if (checkString == null || checkString.isEmpty()) {
 				output.println(new HttpErrorResponse(400, "Bad Request", "Empty request! o.o"));
 				output.flush();
