@@ -8,3 +8,5 @@
 /version/target/maven-archiver/pom.properties
 /core/target/InfoApi-core-0.0.1-SNAPSHOT.jar
 /core/target/maven-archiver/pom.properties
+/core/target/
+/version/target

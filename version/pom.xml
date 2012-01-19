@@ -8,6 +8,15 @@
 	<artifactId>InfoApi-version</artifactId>
 	<packaging>jar</packaging>
 
+	<dependencies>
+		<dependency>
+			<groupId>seta.infoapi</groupId>
+			<artifactId>InfoApi-core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+	
 	
     <build>
 		<sourceDirectory>../src/main/java/version</sourceDirectory>
@@ -15,14 +24,14 @@
             <resource>
                 <targetPath>.</targetPath>
 				<!-- was /src/main/resources... maybe that is better? Baby steps.. -->
-                <directory>${basedir}/src/main/resources/version</directory>
+                <directory>../src/main/resources/version</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>endpoint.info</include>
                 </includes>
             </resource>
         </resources>
-        
+		
         <plugins>
 			<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -40,7 +49,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-					<includes><include>**/version/**</include></includes>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
