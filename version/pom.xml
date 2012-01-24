@@ -8,11 +8,12 @@
 	<artifactId>InfoApi-version</artifactId>
 	<packaging>jar</packaging>
 
+	<!-- there must be a better way to do this-->
 	<dependencies>
 		<dependency>
 			<groupId>seta.infoapi</groupId>
 			<artifactId>InfoApi-core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.4.0-JA-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

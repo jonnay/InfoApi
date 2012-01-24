@@ -27,7 +27,7 @@ public class CommandWorker {
 		return requestLine.substring(0, requestLine.indexOf(" "));
 	}
 
-	private URL getUrl(String requestLine) throws java.net.MalformedURLException {
+	private URL getUrl(String requestLine) throws java.net.MalformedURLException  {
 		return new URL("http://localhost"+
 					   requestLine.substring((requestLine.indexOf(" ")+1),
 											 requestLine.lastIndexOf(" HTTP/")));
@@ -64,17 +64,23 @@ public class CommandWorker {
 
 			/* Right now endpoints are basically mounted on the root */
 			
-			String[] pathFrags = url.getPath().substring(1).split("/");
-			command = pathFrags[0];
+			String[] pathFrags = url.getPath().substring(1).split("/");  
+			command = "/"+pathFrags[0];
 				
 			log.info("[InfoApi] running: ("+command+")");
 
-			return new HttpErrorResponse(500, "Internal Server Error", "Not Built yet!");
+			InfoApiEndpoint e = plugin.getEndpointManager().getEndpoint(command);
+			if (e != null) {
+				return e.handle(method, url, pathFrags);
+			} else {
+				return new HttpErrorResponse(404, "Not Found", "The endpoint "+command+" is not available.");
+			}
 			
 			// catching Exception e?  Really? This needs to die soon.
 		} catch (Exception e) {
-			log.severe("[InfoApi] processCommand " + e.getMessage());
-			return new HttpErrorResponse(500, "Internal Server Error", e.toString());
+			log.severe("[InfoApi] Exception while calling method on endpoint " + e.toString());
+			e.printStackTrace();
+			return new HttpExceptionResponse(e);
 		}
     }
 
@@ -82,11 +88,17 @@ public class CommandWorker {
 	//TODO enable user/password authentication on URL
 	//TODO enable hashed passwords 
 	public boolean authenticates(URL url) {
+		String secretkey = configuration.getString("secretKey");
+		String query = url.getQuery();
+		
 		// every time we check this, we want to be LOUD about the fact the secret is unsecure
-		if (configuration.getString("secretKey").equals("secret")) {
+		if (secretkey.equals("secret")) {
 			log.severe("[InfoApi] SECRET KEY IS INSECURE! (edit plugins/InfoApi/config.yml and Choose something sekrut!)");
 		}
+
+		log.info("[InfoApi] Comparing query:"+query+" to:secret="+secretkey);
 		
-		return (url.getQuery().equals("secret="+configuration.getString("secretKey")));
+		return ((query != null) and
+				(query.equals("secret="+secretkey)));
 	}
 }

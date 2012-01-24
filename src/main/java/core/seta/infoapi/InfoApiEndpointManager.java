@@ -35,6 +35,7 @@ public class InfoApiEndpointManager {
 	Logger log = Logger.getLogger("Minecraft");
 	
 	public InfoApiEndpointManager(InfoApi plugin) {
+		log.info("[InfoApi] Scanning endpoints directory.");
 		endpointFiles = new HashMap<String, File>();
 		endpoints = new HashMap<String, InfoApiEndpoint>();
 		this.plugin = plugin;
@@ -46,10 +47,12 @@ public class InfoApiEndpointManager {
 		for (String endpointFile : dir.list()) {
 
 			File file = new File(dir, endpointFile);
-			String name = endpointFile.toLowerCase().replace(".jar", "");
+			String  name = "/"+ endpointFile.toLowerCase().replace(".jar", "");
 
 			endpointFiles.put(name, file);
 
+			log.info("[InfoApi] Found jar, mounting: "+name);
+			
 			try {
 				urls.add(file.toURI().toURL());
 			} catch (java.net.MalformedURLException e) {
@@ -68,8 +71,12 @@ public class InfoApiEndpointManager {
 				return endpoints.get(id);
 			} else {
 				InfoApiEndpoint endpoint = loadEndpoint(endpointFiles.get(id));
-				endpoints.put(id, endpoint);
-				return endpoint;
+				if (endpoint != null) {
+					endpoints.put(id, endpoint);
+					return endpoint;
+				} else {
+					throw new InfoApiEndpointLoaderException("Tried to retrieve endpoint from endpointFIles collection, but got null for id:"+id);
+				}
 			}
 		} else {
 			throw new InfoApiEndpointLoaderException("Endpoint "+id+" does not exist.");
@@ -98,6 +105,7 @@ public class InfoApiEndpointManager {
 					// String line = reader.readLine();
 					// if (line.substring(0, DELINEATION.length)) {
                     mainClass = reader.readLine().substring(DELINEATION.length());
+					log.info("[InfoAPi] main class found in "+file.getName());
                     break;
                 }
             }
@@ -109,7 +117,7 @@ public class InfoApiEndpointManager {
                 InfoApiEndpoint iae = ctor.newInstance(plugin);
                 return iae;
             } else {
-                throw new InfoApiEndpointLoaderException("No endpoint.info file found in the jar to delineate main class!");
+                throw new InfoApiEndpointLoaderException("No endpoint.info file found in the jar "+file.getName()+"to delineate main class!");
             }
         } catch (Exception e) {
             e.printStackTrace();

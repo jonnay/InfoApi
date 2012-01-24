@@ -3,7 +3,7 @@
 	<artifactId>InfoApi</artifactId>
 	<packaging>pom</packaging>
     <groupId>seta.infoapi</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.4.0-JA-SNAPSHOT</version>
     <name>InfoApi</name>
     <url>https://github.com/jonnay/InfoApi</url>
     <description></description>

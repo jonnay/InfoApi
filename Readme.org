@@ -78,12 +78,131 @@ echo $onlineplayer;
 
 * Testing
  I would rather do this through maven, but I lack the maven knowhow, so .. instead it is an org-babel shell script
-#+begin_src sh
-cp -v target/InfoApi-0.0.1-SNAPSHOT.jar ../mineCraftStatus/server/plugins/
+#+begin_src emacs-lisp 
+(mcstat-run-minecraft)
+(pop-to-buffer "*mcstat-mc*")
 #+end_src
 
 #+results:
-: target/InfoApi-0.0.1-SNAPSHOT.jar -> ../mineCraftStatus/server/plugins/InfoApi-0.0.1-SNAPSHOT.jar
+
+#+begin_src sh :results output
+mvn install
+mkdir -v ../mineCraftStatus/server/plugins/InfoApi/endpoints
+cp -v version/target/InfoApi-version-0.0.1-SNAPSHOT.jar ../mineCraftStatus/server/plugins/InfoApi/endpoints/version.jar
+cp -v core/target/InfoApi-core-0.4.0-JA-SNAPSHOT.jar ../mineCraftStatus/server/plugins/InfoApi.jar
+#+end_src
+
+#+results:
+#+begin_example
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] InfoApi
+[INFO] InfoApi-core
+[INFO] InfoApi-version
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building InfoApi 0.4.0-JA-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ InfoApi ---
+[INFO] Installing /Users/jonathana/projects/InfoApi/pom.xml to /Users/jonathana/.m2/repository/seta/infoapi/InfoApi/0.4.0-JA-SNAPSHOT/InfoApi-0.4.0-JA-SNAPSHOT.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building InfoApi-core 0.4.0-JA-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:resources (default-resources) @ InfoApi-core ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 2 resources to .
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ InfoApi-core ---
+[INFO] Compiling 1 source file to /Users/jonathana/projects/InfoApi/core/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:testResources (default-testResources) @ InfoApi-core ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Users/jonathana/projects/InfoApi/core/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:testCompile (default-testCompile) @ InfoApi-core ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.7.2:test (default-test) @ InfoApi-core ---
+[INFO] No tests to run.
+[INFO] Surefire report directory: /Users/jonathana/projects/InfoApi/core/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+There are no tests to run.
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-jar-plugin:2.3.1:jar (default-jar) @ InfoApi-core ---
+[INFO] Building jar: /Users/jonathana/projects/InfoApi/core/target/InfoApi-core-0.4.0-JA-SNAPSHOT.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ InfoApi-core ---
+[INFO] Installing /Users/jonathana/projects/InfoApi/core/target/InfoApi-core-0.4.0-JA-SNAPSHOT.jar to /Users/jonathana/.m2/repository/seta/infoapi/InfoApi-core/0.4.0-JA-SNAPSHOT/InfoApi-core-0.4.0-JA-SNAPSHOT.jar
+[INFO] Installing /Users/jonathana/projects/InfoApi/core/pom.xml to /Users/jonathana/.m2/repository/seta/infoapi/InfoApi-core/0.4.0-JA-SNAPSHOT/InfoApi-core-0.4.0-JA-SNAPSHOT.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building InfoApi-version 0.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:resources (default-resources) @ InfoApi-version ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource to .
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ InfoApi-version ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:testResources (default-testResources) @ InfoApi-version ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Users/jonathana/projects/InfoApi/version/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:testCompile (default-testCompile) @ InfoApi-version ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.7.2:test (default-test) @ InfoApi-version ---
+[INFO] No tests to run.
+[INFO] Surefire report directory: /Users/jonathana/projects/InfoApi/version/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+There are no tests to run.
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-jar-plugin:2.3.1:jar (default-jar) @ InfoApi-version ---
+[INFO] Building jar: /Users/jonathana/projects/InfoApi/version/target/InfoApi-version-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ InfoApi-version ---
+[INFO] Installing /Users/jonathana/projects/InfoApi/version/target/InfoApi-version-0.0.1-SNAPSHOT.jar to /Users/jonathana/.m2/repository/seta/infoapi/InfoApi-version/0.0.1-SNAPSHOT/InfoApi-version-0.0.1-SNAPSHOT.jar
+[INFO] Installing /Users/jonathana/projects/InfoApi/version/pom.xml to /Users/jonathana/.m2/repository/seta/infoapi/InfoApi-version/0.0.1-SNAPSHOT/InfoApi-version-0.0.1-SNAPSHOT.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] 
+[INFO] InfoApi ........................................... SUCCESS [0.628s]
+[INFO] InfoApi-core ...................................... SUCCESS [3.985s]
+[INFO] InfoApi-version ................................... SUCCESS [0.843s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 5.647s
+[INFO] Finished at: Tue Jan 24 10:34:53 MST 2012
+[INFO] Final Memory: 10M/81M
+[INFO] ------------------------------------------------------------------------
+version/target/InfoApi-version-0.0.1-SNAPSHOT.jar -> ../mineCraftStatus/server/plugins/InfoApi/endpoints/version.jar
+core/target/InfoApi-core-0.4.0-JA-SNAPSHOT.jar -> ../mineCraftStatus/server/plugins/InfoApi.jar
+#+end_example
+
 
 ** Global URLs
 http://localhost:25577/ram?secret=secret (returns as: FREE MAX TOTAL)
@@ -118,7 +237,7 @@ http://localhost:25577/temp/world?secret=secret (Temperature at Spawn )
 ** PROJECT Fix problems with ClientWorker
 *** DONE Remove magic Numbers!
 	 CLOSED: [2012-01-18 Wed 11:55]
-*** TODO Move secret out of this class and into its own.
+*** TODO Move secret out of this class and into its own.																			  :NEXT:
 *** DONE Look into exiting URL parsing libraries in java
 	 CLOSED: [2012-01-18 Wed 23:42]
 *** DONE Fix url Parsing to be more rest like
@@ -135,7 +254,7 @@ http://localhost:25577/temp/world?secret=secret (Temperature at Spawn )
 		- HttpClientErrorResponse
 	- HttpContentResponse (concrete for now, abstract later to seperate the content and presentation.  (json responses, text responses)
 ** PROJECT Fix config
-*** TODO better checking about the config.  The Default should be much nicer.
+*** TODO better checking about the config.  The Default should be much nicer.														  :NEXT:
 *** DONE Standard seems to be YAML.  Make that happen
 	 CLOSED: [2012-01-18 Wed 17:04]
 *** DONE Test
@@ -147,10 +266,10 @@ http://localhost:25577/temp/world?secret=secret (Temperature at Spawn )
 	 CLOSED: [2012-01-18 Wed 13:31]
 *** DONE Secret is set to "secret"?  throw warnings, maybe disable server
 	 CLOSED: [2012-01-18 Wed 23:45]
-*** TODO make sure the check is valid
+*** TODO make sure the check is valid																								  :NEXT:
 *** TODO do a more secure method of hashing.
 ** PROJECT Fix commands in general
-*** TODO Add a way to send chat text to the server
+*** TODO Add a way to send chat text to the server																					  :NEXT:
 *** TODO add a way to run a command
 *** TODO Refactor commands completely:
 	- one class per command
@@ -158,7 +277,10 @@ http://localhost:25577/temp/world?secret=secret (Temperature at Spawn )
 ** PROJECT Make endpoints dynamic
 *** TODO Refactor out old endpoints into their own classes
 *** TODO add command /reload to reload the manager and all endpoint classes
-*** TODO Stash the loader somewhere, and execute it 
+*** TODO Add request state handling																									  :NEXT:
+	[[file:src/main/java/core/seta/infoapi/EndpointState.java::]]
+*** DONE Stash the loader somewhere, and execute it
+	 CLOSED: [2012-01-23 Mon 09:02]
 *** TODO compile the infoAPI files 
 #+begin_src java
 

@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>seta.infoapi</groupId>
 		<artifactId>InfoApi</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.4.0-JA-SNAPSHOT</version>
 	</parent>
 	<artifactId>InfoApi-core</artifactId>
 	<packaging>jar</packaging>
