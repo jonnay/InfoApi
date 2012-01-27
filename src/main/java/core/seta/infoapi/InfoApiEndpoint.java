@@ -18,7 +18,7 @@ public abstract class InfoApiEndpoint {
 	String endpoint;
 	String docString;
 
-	Logger log = Logger.getLogger("Minecraft");
+	protected Logger log = Logger.getLogger("Minecraft");
 
 	/**
 	 * You could over-ride handle if you wanted to handle some non-standard HTTP verbs.
@@ -30,19 +30,19 @@ public abstract class InfoApiEndpoint {
 	    EndpointState state = new EndpointState(method, url, pathFrags);
 		try {
 			Class<?> c = this.getClass();
-			Method handler = c.getMethod(cmethod,Class.forName("seta.infoapi.EndpointState"));
+			Method handler = c.getMethod(cmethod, Class.forName("seta.infoapi.EndpointState"));
 			return (HttpResponse) handler.invoke(this, state);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			return new HttpErrorResponse(500, "Internal Server Error", e.toString());
+			return new HttpExceptionResponse(e);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-			return new HttpErrorResponse(500, "Internal Server Error", e.toString());
+			return new HttpExceptionResponse(e);
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
-			return new HttpErrorResponse(500, "Internal Server Error", e.toString());
+			return new HttpExceptionResponse(e);
 		} catch (NoSuchMethodException e) {
-			return notAllowed();
+			return notAllowed(e);
 		}
 	}
 
@@ -51,8 +51,8 @@ public abstract class InfoApiEndpoint {
 		return new HttpContentResponse(endpoint+" -- "+docString);
 	}
 
-	private HttpResponse notAllowed() {
+	private HttpResponse notAllowed(Exception e) {
 		// we kinda break HTTP here.  Which is sad.
-		return new HttpErrorResponse(405, "Method Not Allowed", "The Endpoint "+this.endpoint+" doesn't understand this method");
+		return new HttpErrorResponse(405, "Method Not Allowed", "The Endpoint doesn't understand this method.  Exception: "+e.getMessage()+"  "+HttpExceptionResponse.getStackTrace(e));
 	}
 }

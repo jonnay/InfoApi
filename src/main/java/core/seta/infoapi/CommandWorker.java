@@ -96,7 +96,6 @@ public class CommandWorker {
 			log.severe("[InfoApi] SECRET KEY IS INSECURE! (edit plugins/InfoApi/config.yml and Choose something sekrut!)");
 		}
 
-		log.info("[InfoApi] Comparing query:"+query+" to:secret="+secretkey);
 		
 		return ((query != null) && (query.equals("secret="+secretkey)));
 	}

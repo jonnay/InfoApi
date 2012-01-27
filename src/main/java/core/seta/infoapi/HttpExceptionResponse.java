@@ -10,7 +10,7 @@ public class HttpExceptionResponse extends HttpResponse {
 		this.setContent(e.getMessage() + "\n"+ getStackTrace(e));		
 	}
 
-	private String getStackTrace(Exception e) {
+	public static String getStackTrace(Exception e) {
 		Writer result =  new StringWriter();
 		PrintWriter pw = new PrintWriter(result);
 

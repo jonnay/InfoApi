@@ -1,8 +1,10 @@
-* Building
-  A [[./pom.xml]] is being worked on... but I am new to maven, so it probably sucks.  It sucks less then forcing you to use eclipse
-  though.
 
 * Testing
+
+  This is a great chrome extension for testing:
+
+  https://chrome.google.com/webstore/detail/fhjcajmcbmldlhcimfajhfbgofnpcjmb
+
  I would rather do this through maven, but I lack the maven knowhow, so .. instead it is an org-babel shell script
 #+begin_src emacs-lisp 
 (mcstat-run-minecraft)
@@ -15,6 +17,8 @@
 mvn install
 mkdir -v ../mineCraftStatus/server/plugins/InfoApi/endpoints
 cp -v version/target/InfoApi-version-0.0.1-SNAPSHOT.jar ../mineCraftStatus/server/plugins/InfoApi/endpoints/version.jar
+cp -v info/target/InfoApi-info-0.0.1-SNAPSHOT.jar ../mineCraftStatus/server/plugins/InfoApi/endpoints/info.jar
+cp -v cmd/target/InfoApi-cmd-0.0.1-SNAPSHOT.jar ../mineCraftStatus/server/plugins/InfoApi/endpoints/cmd.jar
 cp -v core/target/InfoApi-core-0.4.0-JA-SNAPSHOT.jar ../mineCraftStatus/server/plugins/InfoApi.jar
 #+end_src
 
@@ -27,6 +31,8 @@ cp -v core/target/InfoApi-core-0.4.0-JA-SNAPSHOT.jar ../mineCraftStatus/server/p
 [INFO] InfoApi
 [INFO] InfoApi-core
 [INFO] InfoApi-version
+[INFO] InfoApi-info
+[INFO] InfoApi-cmd
 [INFO]                                                                         
 [INFO] ------------------------------------------------------------------------
 [INFO] Building InfoApi 0.4.0-JA-SNAPSHOT
@@ -112,20 +118,102 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
 [INFO] --- maven-install-plugin:2.3.1:install (default-install) @ InfoApi-version ---
 [INFO] Installing /Users/jonathana/projects/InfoApi/version/target/InfoApi-version-0.0.1-SNAPSHOT.jar to /Users/jonathana/.m2/repository/seta/infoapi/InfoApi-version/0.0.1-SNAPSHOT/InfoApi-version-0.0.1-SNAPSHOT.jar
 [INFO] Installing /Users/jonathana/projects/InfoApi/version/pom.xml to /Users/jonathana/.m2/repository/seta/infoapi/InfoApi-version/0.0.1-SNAPSHOT/InfoApi-version-0.0.1-SNAPSHOT.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building InfoApi-info 0.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:resources (default-resources) @ InfoApi-info ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource to .
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ InfoApi-info ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:testResources (default-testResources) @ InfoApi-info ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Users/jonathana/projects/InfoApi/info/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:testCompile (default-testCompile) @ InfoApi-info ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.7.2:test (default-test) @ InfoApi-info ---
+[INFO] No tests to run.
+[INFO] Surefire report directory: /Users/jonathana/projects/InfoApi/info/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+There are no tests to run.
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-jar-plugin:2.3.1:jar (default-jar) @ InfoApi-info ---
+[INFO] Building jar: /Users/jonathana/projects/InfoApi/info/target/InfoApi-info-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ InfoApi-info ---
+[INFO] Installing /Users/jonathana/projects/InfoApi/info/target/InfoApi-info-0.0.1-SNAPSHOT.jar to /Users/jonathana/.m2/repository/seta/infoapi/InfoApi-info/0.0.1-SNAPSHOT/InfoApi-info-0.0.1-SNAPSHOT.jar
+[INFO] Installing /Users/jonathana/projects/InfoApi/info/pom.xml to /Users/jonathana/.m2/repository/seta/infoapi/InfoApi-info/0.0.1-SNAPSHOT/InfoApi-info-0.0.1-SNAPSHOT.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building InfoApi-cmd 0.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:resources (default-resources) @ InfoApi-cmd ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource to .
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ InfoApi-cmd ---
+[INFO] Compiling 1 source file to /Users/jonathana/projects/InfoApi/cmd/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:testResources (default-testResources) @ InfoApi-cmd ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Users/jonathana/projects/InfoApi/cmd/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:testCompile (default-testCompile) @ InfoApi-cmd ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.7.2:test (default-test) @ InfoApi-cmd ---
+[INFO] No tests to run.
+[INFO] Surefire report directory: /Users/jonathana/projects/InfoApi/cmd/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+There are no tests to run.
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-jar-plugin:2.3.1:jar (default-jar) @ InfoApi-cmd ---
+[INFO] Building jar: /Users/jonathana/projects/InfoApi/cmd/target/InfoApi-cmd-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ InfoApi-cmd ---
+[INFO] Installing /Users/jonathana/projects/InfoApi/cmd/target/InfoApi-cmd-0.0.1-SNAPSHOT.jar to /Users/jonathana/.m2/repository/seta/infoapi/InfoApi-cmd/0.0.1-SNAPSHOT/InfoApi-cmd-0.0.1-SNAPSHOT.jar
+[INFO] Installing /Users/jonathana/projects/InfoApi/cmd/pom.xml to /Users/jonathana/.m2/repository/seta/infoapi/InfoApi-cmd/0.0.1-SNAPSHOT/InfoApi-cmd-0.0.1-SNAPSHOT.pom
 [INFO] ------------------------------------------------------------------------
 [INFO] Reactor Summary:
 [INFO] 
-[INFO] InfoApi ........................................... SUCCESS [0.911s]
-[INFO] InfoApi-core ...................................... SUCCESS [3.675s]
-[INFO] InfoApi-version ................................... SUCCESS [0.861s]
+[INFO] InfoApi ........................................... SUCCESS [0.622s]
+[INFO] InfoApi-core ...................................... SUCCESS [4.891s]
+[INFO] InfoApi-version ................................... SUCCESS [0.990s]
+[INFO] InfoApi-info ...................................... SUCCESS [0.915s]
+[INFO] InfoApi-cmd ....................................... SUCCESS [0.833s]
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time: 5.636s
-[INFO] Finished at: Fri Jan 27 10:18:38 MST 2012
+[INFO] Total time: 8.516s
+[INFO] Finished at: Fri Jan 27 16:03:17 MST 2012
 [INFO] Final Memory: 10M/81M
 [INFO] ------------------------------------------------------------------------
 version/target/InfoApi-version-0.0.1-SNAPSHOT.jar -> ../mineCraftStatus/server/plugins/InfoApi/endpoints/version.jar
+info/target/InfoApi-info-0.0.1-SNAPSHOT.jar -> ../mineCraftStatus/server/plugins/InfoApi/endpoints/info.jar
+cmd/target/InfoApi-cmd-0.0.1-SNAPSHOT.jar -> ../mineCraftStatus/server/plugins/InfoApi/endpoints/cmd.jar
 core/target/InfoApi-core-0.4.0-JA-SNAPSHOT.jar -> ../mineCraftStatus/server/plugins/InfoApi.jar
 #+end_example
 
@@ -244,7 +332,7 @@ http://localhost:25577/temp/world?secret=secret (Temperature at Spawn )
 					break;
 					// PLUGINS
 				case PLUGINS:
-					outputString = returnPluginNames(Bukkit.getServer().getPluginManager().getPlugins());
+					outputString = returnPluginNames();
 					break;
 					// PLUGINS_SHORT
 				case PLUGINS_SHORT:
@@ -431,6 +519,8 @@ http://localhost:25577/temp/world?secret=secret (Temperature at Spawn )
 		}
     }
 #+end_src
+
+#+results:
 
 * License 
 #+begin_src txt :tangle LICENSE.txt 

@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>seta.infoapi</groupId>
+		<artifactId>InfoApi</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>InfoApi-cmd</artifactId>
+	<packaging>jar</packaging>
+
+	<!-- there must be a better way to do this-->
+	<dependencies>
+		<dependency>
+			<groupId>seta.infoapi</groupId>
+			<artifactId>InfoApi-core</artifactId>
+			<version>0.4.0-JA-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+	
+	
+    <build>
+		<sourceDirectory>../src/main/java/cmd</sourceDirectory>
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+				<!-- was /src/main/resources... maybe that is better? Baby steps.. -->
+                <directory>../src/main/resources/cmd</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>endpoint.info</include>
+                </includes>
+            </resource>
+        </resources>
+		
+        <plugins>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

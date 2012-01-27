@@ -14,8 +14,8 @@
 	<modules>
 		<module>core</module>
 		<module>version</module>
-		<!--<module>ram</module>
-		<module>onlinemode</module>-->
+		<module>info</module>
+		<module>cmd</module>
 	</modules>
 	
     <dependencies>

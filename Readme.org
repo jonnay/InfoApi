@@ -70,4 +70,44 @@ curl_setopt($ch, CURLOPT_TIMEOUT, 1000);
 $onlineplayer = curl_exec($ch);
 echo $onlineplayer;
 #+end_src
+* Development
+** What are .org files?
+   They are specialized emacs text files.  They actually rule quite a lot.  There are 2 in this project
+   - readme.org :: The source of this file.
+   - Dev.org :: My to do list, and build environment.  It actually can run my test instance of the server, and compiles everything for me.
+                Org-Babel rules. It also has the set of development tasks I am working on.
 
+   If you really want to know more, then check out emacs org mode. 
+
+** Building
+   A [[./pom.xml]] is being worked on... but I am new to maven, so it probably sucks.  It sucks less then forcing you to use eclipse
+   though.
+
+** Building your own plugin
+
+   Sorry for the spotty documentation... :/
+
+*** Resource file inside of jar called endpoint.info in main directory. contains:
+#+begin_src text
+main-class: <fully-qualified-path-to-class-in-jar>
+#+end_src
+
+For example
+
+#+begin_src text
+main-class: net.jonnay.infoapi.Info
+#+end_src
+
+Then you just need to build a class that extend InfoApiEndpoint, provide a method with the following signature:
+
+public HttpResponse <lower-case-http-verb>Method(EndpointState s)
+
+i.e.
+
+public HttpResponse getMethod(EndpointState s) 
+
+or
+
+public HttpReponse postMethod(EndpointState s) 
+
+The "version" and "info" projects will help you get started. 
