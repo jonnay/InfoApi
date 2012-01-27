@@ -1,4 +1,4 @@
-* InfoApi V 0.1.1(JA)
+* InfoApi V 4.0.0(JA)
 
 * Documentation
 
