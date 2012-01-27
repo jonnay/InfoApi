@@ -10,3 +10,16 @@
 /core/target/maven-archiver/pom.properties
 /core/target/
 /version/target
+/cmd/target/InfoApi-cmd-0.0.1-SNAPSHOT.jar
+/cmd/target/classes/endpoint.info
+/cmd/target/classes/net/jonnay/infoapi/Cmd.class
+/cmd/target/maven-archiver/pom.properties
+/info/target/InfoApi-info-0.0.1-SNAPSHOT.jar
+/info/target/classes/endpoint.info
+/info/target/classes/net/jonnay/infoapi/Info.class
+/info/target/maven-archiver/pom.properties
+/src/main/java/version/.DS_Store
+/src/main/java/version/net/.DS_Store
+/src/main/java/version/net/jonnay/.DS_Store
+/src/main/java/version/net/jonnay/infoapi/.DS_Store
+/version/.DS_Store
