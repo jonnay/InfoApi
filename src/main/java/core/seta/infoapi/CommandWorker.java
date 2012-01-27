@@ -98,7 +98,6 @@ public class CommandWorker {
 
 		log.info("[InfoApi] Comparing query:"+query+" to:secret="+secretkey);
 		
-		return ((query != null) and
-				(query.equals("secret="+secretkey)));
+		return ((query != null) && (query.equals("secret="+secretkey)));
 	}
 }

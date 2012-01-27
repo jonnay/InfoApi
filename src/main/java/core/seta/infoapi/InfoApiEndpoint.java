@@ -26,12 +26,12 @@ public abstract class InfoApiEndpoint {
 	public HttpResponse handle(String method, URL url, String[] pathFrags)
 	{
 		String cmethod = method.toLowerCase()+"Method";
-		log.info("Calling "+cmethod+" on "+endpoint);
+		log.info("Calling "+cmethod+" on "+this.endpoint);
 	    EndpointState state = new EndpointState(method, url, pathFrags);
 		try {
 			Class<?> c = this.getClass();
 			Method handler = c.getMethod(cmethod,Class.forName("seta.infoapi.EndpointState"));
-			return (HttpResponse) handler.invoke(state);
+			return (HttpResponse) handler.invoke(this, state);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			return new HttpErrorResponse(500, "Internal Server Error", e.toString());
@@ -53,6 +53,6 @@ public abstract class InfoApiEndpoint {
 
 	private HttpResponse notAllowed() {
 		// we kinda break HTTP here.  Which is sad.
-		return new HttpErrorResponse(405, "Method Not Allowed", "The Endpoint "+endpoint+" doesn't understand this method");
+		return new HttpErrorResponse(405, "Method Not Allowed", "The Endpoint "+this.endpoint+" doesn't understand this method");
 	}
 }
