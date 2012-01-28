@@ -23,3 +23,7 @@
 /src/main/java/version/net/jonnay/.DS_Store
 /src/main/java/version/net/jonnay/infoapi/.DS_Store
 /version/.DS_Store
+/player/target/classes/net/jonnay/infoapi/Player.class
+/player/target/maven-archiver/pom.properties
+/player/target/classes/endpoint.info
+/player/target/InfoApi-player-0.0.1-SNAPSHOT.jar

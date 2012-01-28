@@ -16,6 +16,7 @@
 		<module>version</module>
 		<module>info</module>
 		<module>cmd</module>
+		<module>player</module>
 	</modules>
 	
     <dependencies>

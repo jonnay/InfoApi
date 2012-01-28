@@ -7,11 +7,15 @@
 
  I would rather do this through maven, but I lack the maven knowhow, so .. instead it is an org-babel shell script
 #+begin_src emacs-lisp 
+(save-excursion
+ (set-buffer "Readme.org")
+ (org-export-as-ascii 3))
 (mcstat-run-minecraft)
 (pop-to-buffer "*mcstat-mc*")
 #+end_src
 
 #+results:
+
 
 #+begin_src sh :results output
 mvn install
@@ -19,6 +23,7 @@ mkdir -v ../mineCraftStatus/server/plugins/InfoApi/endpoints
 cp -v version/target/InfoApi-version-0.0.1-SNAPSHOT.jar ../mineCraftStatus/server/plugins/InfoApi/endpoints/version.jar
 cp -v info/target/InfoApi-info-0.0.1-SNAPSHOT.jar ../mineCraftStatus/server/plugins/InfoApi/endpoints/info.jar
 cp -v cmd/target/InfoApi-cmd-0.0.1-SNAPSHOT.jar ../mineCraftStatus/server/plugins/InfoApi/endpoints/cmd.jar
+cp -v player/target/InfoApi-player-0.0.1-SNAPSHOT.jar ../mineCraftStatus/server/plugins/InfoApi/endpoints/player.jar
 cp -v core/target/InfoApi-core-0.4.0-JA-SNAPSHOT.jar ../mineCraftStatus/server/plugins/InfoApi.jar
 #+end_src
 
@@ -33,6 +38,7 @@ cp -v core/target/InfoApi-core-0.4.0-JA-SNAPSHOT.jar ../mineCraftStatus/server/p
 [INFO] InfoApi-version
 [INFO] InfoApi-info
 [INFO] InfoApi-cmd
+[INFO] InfoApi-player
 [INFO]                                                                         
 [INFO] ------------------------------------------------------------------------
 [INFO] Building InfoApi 0.4.0-JA-SNAPSHOT
@@ -50,7 +56,7 @@ cp -v core/target/InfoApi-core-0.4.0-JA-SNAPSHOT.jar ../mineCraftStatus/server/p
 [INFO] Copying 2 resources to .
 [INFO] 
 [INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ InfoApi-core ---
-[INFO] Compiling 1 source file to /Users/jonathana/projects/InfoApi/core/target/classes
+[INFO] Nothing to compile - all classes are up to date
 [INFO] 
 [INFO] --- maven-resources-plugin:2.4.3:testResources (default-testResources) @ InfoApi-core ---
 [INFO] Using 'UTF-8' encoding to copy filtered resources.
@@ -167,7 +173,7 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
 [INFO] Copying 1 resource to .
 [INFO] 
 [INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ InfoApi-cmd ---
-[INFO] Compiling 1 source file to /Users/jonathana/projects/InfoApi/cmd/target/classes
+[INFO] Nothing to compile - all classes are up to date
 [INFO] 
 [INFO] --- maven-resources-plugin:2.4.3:testResources (default-testResources) @ InfoApi-cmd ---
 [INFO] Using 'UTF-8' encoding to copy filtered resources.
@@ -196,24 +202,65 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
 [INFO] --- maven-install-plugin:2.3.1:install (default-install) @ InfoApi-cmd ---
 [INFO] Installing /Users/jonathana/projects/InfoApi/cmd/target/InfoApi-cmd-0.0.1-SNAPSHOT.jar to /Users/jonathana/.m2/repository/seta/infoapi/InfoApi-cmd/0.0.1-SNAPSHOT/InfoApi-cmd-0.0.1-SNAPSHOT.jar
 [INFO] Installing /Users/jonathana/projects/InfoApi/cmd/pom.xml to /Users/jonathana/.m2/repository/seta/infoapi/InfoApi-cmd/0.0.1-SNAPSHOT/InfoApi-cmd-0.0.1-SNAPSHOT.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building InfoApi-player 0.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:resources (default-resources) @ InfoApi-player ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource to .
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ InfoApi-player ---
+[INFO] Compiling 1 source file to /Users/jonathana/projects/InfoApi/player/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:testResources (default-testResources) @ InfoApi-player ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Users/jonathana/projects/InfoApi/player/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:testCompile (default-testCompile) @ InfoApi-player ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.7.2:test (default-test) @ InfoApi-player ---
+[INFO] No tests to run.
+[INFO] Surefire report directory: /Users/jonathana/projects/InfoApi/player/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+There are no tests to run.
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-jar-plugin:2.3.1:jar (default-jar) @ InfoApi-player ---
+[INFO] Building jar: /Users/jonathana/projects/InfoApi/player/target/InfoApi-player-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ InfoApi-player ---
+[INFO] Installing /Users/jonathana/projects/InfoApi/player/target/InfoApi-player-0.0.1-SNAPSHOT.jar to /Users/jonathana/.m2/repository/seta/infoapi/InfoApi-player/0.0.1-SNAPSHOT/InfoApi-player-0.0.1-SNAPSHOT.jar
+[INFO] Installing /Users/jonathana/projects/InfoApi/player/pom.xml to /Users/jonathana/.m2/repository/seta/infoapi/InfoApi-player/0.0.1-SNAPSHOT/InfoApi-player-0.0.1-SNAPSHOT.pom
 [INFO] ------------------------------------------------------------------------
 [INFO] Reactor Summary:
 [INFO] 
-[INFO] InfoApi ........................................... SUCCESS [0.622s]
-[INFO] InfoApi-core ...................................... SUCCESS [4.891s]
-[INFO] InfoApi-version ................................... SUCCESS [0.990s]
-[INFO] InfoApi-info ...................................... SUCCESS [0.915s]
-[INFO] InfoApi-cmd ....................................... SUCCESS [0.833s]
+[INFO] InfoApi ........................................... SUCCESS [1.427s]
+[INFO] InfoApi-core ...................................... SUCCESS [6.503s]
+[INFO] InfoApi-version ................................... SUCCESS [0.796s]
+[INFO] InfoApi-info ...................................... SUCCESS [0.768s]
+[INFO] InfoApi-cmd ....................................... SUCCESS [0.900s]
+[INFO] InfoApi-player .................................... SUCCESS [1.986s]
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time: 8.516s
-[INFO] Finished at: Fri Jan 27 16:03:17 MST 2012
+[INFO] Total time: 12.865s
+[INFO] Finished at: Sat Jan 28 15:43:27 MST 2012
 [INFO] Final Memory: 10M/81M
 [INFO] ------------------------------------------------------------------------
 version/target/InfoApi-version-0.0.1-SNAPSHOT.jar -> ../mineCraftStatus/server/plugins/InfoApi/endpoints/version.jar
 info/target/InfoApi-info-0.0.1-SNAPSHOT.jar -> ../mineCraftStatus/server/plugins/InfoApi/endpoints/info.jar
 cmd/target/InfoApi-cmd-0.0.1-SNAPSHOT.jar -> ../mineCraftStatus/server/plugins/InfoApi/endpoints/cmd.jar
+player/target/InfoApi-player-0.0.1-SNAPSHOT.jar -> ../mineCraftStatus/server/plugins/InfoApi/endpoints/player.jar
 core/target/InfoApi-core-0.4.0-JA-SNAPSHOT.jar -> ../mineCraftStatus/server/plugins/InfoApi.jar
 #+end_example
 
@@ -246,6 +293,13 @@ http://localhost:25577/chat?secret=secret
 http://localhost:25577/cmd/cmd_attribute_anothe?secret=secret
 http://localhost:25577/temp/world?secret=secret (Temperature at Spawn )
 
+
+* Compiling
+#+begin_src sh :results output
+mvn build
+#+end_src sh
+
+#+results:
 
 * Todo
 ** PROJECT Fix problems with ClientWorker
@@ -284,18 +338,36 @@ http://localhost:25577/temp/world?secret=secret (Temperature at Spawn )
 *** TODO do a more secure method of hashing.
 ** PROJECT Fix commands in general
 *** TODO Add a way to send chat text to the server																					  :NEXT:
-*** TODO add a way to run a command
-*** TODO Refactor commands completely:
+*** DONE add a way to run a command
+	 CLOSED: [2012-01-28 Sat 13:51]
+*** DONE Refactor commands completely:
+	 CLOSED: [2012-01-28 Sat 13:51]
 	- one class per command
 
+** PROJECT Better sub endpoints, that have more intelligence
+** PROJECT Options should be WAY smarter. use moar reflection.
+** PROJECT Allow for different content types
+*** PROJECT Make a generaliezd data class
+*** PROJECT Parse full headers
+*** PROJECT Write output transformers 
 ** PROJECT Make endpoints dynamic
-*** TODO Refactor out old endpoints into their own classes
-*** TODO add command /reload to reload the manager and all endpoint classes
-*** TODO Add request state handling																									  :NEXT:
+*** DONE Refactor out old endpoints into their own classes
+	 CLOSED: [2012-01-28 Sat 13:51]
+*** TODO add command /reload to reload the manager and all endpoint classes															  :NEXT:
+*** DONE Add request state handling
+	 CLOSED: [2012-01-28 Sat 13:52]
 	[[file:src/main/java/core/seta/infoapi/EndpointState.java::]]
 *** DONE Stash the loader somewhere, and execute it
 	 CLOSED: [2012-01-23 Mon 09:02]
-*** TODO compile the infoAPI files 
+*** PROJECT Deal with the rest of the code inside of command worker																   :PROJECT:
+**** DONE Version_short
+	 CLOSED: [2012-01-28 Sat 14:10]
+**** DONE Plugins_short  getName() instead of getFullName()
+	 CLOSED: [2012-01-28 Sat 14:10]
+**** TODO World/time
+**** TODO World/Players
+**** DONE Turn this source-chunk in to discreet todo items
+	 CLOSED: [2012-01-28 Sat 14:10]
 #+begin_src java
 
     private HttpResponse workGenericCommand(int commandOrdinal) {
@@ -320,7 +392,7 @@ http://localhost:25577/temp/world?secret=secret (Temperature at Spawn )
 					// VERSION_SHORT
 				case VERSION_SHORT:
 					outputString = Bukkit.getServer().getVersion();
-					outputString = outputString.substring(outputString.indexOf("(") + 1, outputString.lastIndexOf(")"));
+					outputString = outputString
 					break;
 					// RAM
 				case RAM:
